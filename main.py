@@ -8,14 +8,12 @@ st.markdown("## 📱 Dashboard de Uso de Dispositivos Móveis e Comportamento de
 st.markdown("---")
 
 # Sidebar - Upload
-st.sidebar.header("📂 Carregar Dados")
-uploaded_file = st.sidebar.file_uploader("Selecione o arquivo CSV", type=["csv"])
+@st.cache_data
+def load_data():
+    df = pd.read_csv("user_behavior_dataset.csv")
+    return df
 
-if not uploaded_file:
-    st.warning("Por favor, envie o arquivo CSV para começar a análise.")
-    st.stop()
-
-df = pd.read_csv(uploaded_file)
+df = load_data()
 
 # Colunas obrigatórias
 required_columns = [
