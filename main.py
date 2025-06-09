@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.figure_factory as ff
+from sklearn.preprocessing import StandardScaler
 
 # --- Configuração da Página ---
 st.set_page_config(page_title="📊 Dashboard Mobile BI", layout="wide")
@@ -11,8 +12,17 @@ st.markdown("---")
 # --- Carregamento dos Dados (com cache para performance) ---
 @st.cache_data
 def load_data():
-    # Substitua "user_behavior_dataset.csv" pelo caminho do seu arquivo se for diferente
     df = pd.read_csv("user_behavior_dataset.csv")
+
+    
+    # pré - processamento
+    num_cols = df.select_dtypes(include='number').columns
+    df[num_cols] = df[num_cols].fillna(df[num_cols].mean())
+
+    cat_cols = df.select_dtypes(include=['object', 'category']).columns
+    df[cat_cols] = df[cat_cols].fillna(df[cat_cols].mode().iloc[0])
+
+
     return df
 
 df = load_data()
